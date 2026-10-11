@@ -53,12 +53,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentUser(user);
       if (user) {
         try {
-          const profile = await getStudentProfile(user.uid);
+          let profile = await getStudentProfile(user.uid);
+          if (!profile && user.email) {
+            // Auto-generate profile from Google Account details so the user can enter directly!
+            const defaultUsername = (user.email.split('@')[0] || 'student').replace(/[^a-zA-Z0-9_]/g, '').toLowerCase().slice(0, 20) || `user_${user.uid.slice(0, 5)}`;
+            const timestamp = new Date().toISOString();
+            profile = {
+              uid: user.uid,
+              username: defaultUsername,
+              normalized_username: defaultUsername,
+              normalizedUsername: defaultUsername,
+              full_name: user.displayName || defaultUsername,
+              fullName: user.displayName || defaultUsername,
+              course_section: 'GENERAL',
+              courseSection: 'GENERAL',
+              email: user.email,
+              created_at: timestamp,
+              createdAt: timestamp,
+              updated_at: timestamp,
+              updatedAt: timestamp,
+            };
+            // Attempt to save profile in background, don't block if Firestore is restricted
+            try {
+              const { doc, setDoc } = await import('firebase/firestore');
+              const { db } = await import('../lib/firebase');
+              await setDoc(doc(db, 'users', user.uid), profile, { merge: true });
+            } catch (saveErr) {
+              console.warn('Could not persist Google student profile to Firestore:', saveErr);
+            }
+          }
           if (profile) {
             setStudentProfile(profile);
             setNeedsGoogleProfileSetup(false);
           } else {
-            // Logged in via Google but hasn't picked username/courseSection yet
             setStudentProfile(null);
             setNeedsGoogleProfileSetup(true);
           }

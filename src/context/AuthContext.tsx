@@ -140,8 +140,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (profile) {
         setStudentProfile(profile);
         setNeedsGoogleProfileSetup(false);
-      } else {
-        setNeedsGoogleProfileSetup(true);
+      } else if (user) {
+        const defaultUsername = (user.email?.split('@')[0] || 'student').replace(/[^a-zA-Z0-9_]/g, '').toLowerCase().slice(0, 20) || `user_${user.uid.slice(0, 5)}`;
+        const timestamp = new Date().toISOString();
+        const fallbackProfile: StudentProfile = {
+          uid: user.uid,
+          username: defaultUsername,
+          normalized_username: defaultUsername,
+          normalizedUsername: defaultUsername,
+          full_name: user.displayName || defaultUsername,
+          fullName: user.displayName || defaultUsername,
+          course_section: 'GENERAL',
+          courseSection: 'GENERAL',
+          email: user.email || '',
+          created_at: timestamp,
+          createdAt: timestamp,
+          updated_at: timestamp,
+          updatedAt: timestamp,
+        };
+        setStudentProfile(fallbackProfile);
+        setNeedsGoogleProfileSetup(false);
+        try {
+          const { doc, setDoc } = await import('firebase/firestore');
+          const { db } = await import('../lib/firebase');
+          await setDoc(doc(db, 'users', user.uid), fallbackProfile, { merge: true });
+        } catch (e) {
+          console.warn('Could not save Google profile to Firestore:', e);
+        }
       }
     } finally {
       setLoading(false);

@@ -401,7 +401,7 @@ export async function getStudentProfile(uid: string): Promise<StudentProfile | n
     }
     return null;
   } catch (error) {
-    handleFirestoreError(error, OperationType.GET, `users/${uid}`);
+    console.warn(`Profile for user ${uid} not found or not yet created:`, error);
     return null;
   }
 }

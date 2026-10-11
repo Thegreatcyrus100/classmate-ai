@@ -1,0 +1,6 @@
+{
+  "name": "ClassMate AI",
+  "description": "AI-powered college study and review platform with document analysis, comprehensive reviewers, quizzes, flashcards, and classmate collaboration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

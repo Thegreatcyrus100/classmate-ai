@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Student profiles: students can read & edit their own profile
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Username reservation registry
+    match /usernames/{username} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // Study materials
+    match /studyMaterials/{materialId} {
+      allow get: if isSignedIn() && (resource.data.ownerUid == request.auth.uid || resource.data.roomId != "" || resource.data.roomId != null);
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Reviewers
+    match /reviewers/{reviewerId} {
+      allow get: if isSignedIn() && (resource.data.ownerUid == request.auth.uid || resource.data.roomId != "" || resource.data.roomId != null);
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Quizzes
+    match /quizzes/{quizId} {
+      allow get: if isSignedIn() && (resource.data.ownerUid == request.auth.uid || resource.data.roomId != "" || resource.data.roomId != null);
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Quiz attempts
+    match /quizAttempts/{attemptId} {
+      allow get: if isSignedIn() && resource.data.studentUid == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.studentUid == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.studentUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.studentUid == request.auth.uid;
+    }
+
+    // Flashcard decks
+    match /flashcardDecks/{deckId} {
+      allow get: if isSignedIn() && (resource.data.ownerUid == request.auth.uid || resource.data.roomId != "" || resource.data.roomId != null);
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.ownerUid == request.auth.uid || resource.data.roomId != "" || resource.data.roomId != null);
+      allow delete: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Collaborative study rooms
+    match /studyRooms/{roomId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Room members
+    match /roomMembers/{memberId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.studentUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.studentUid == request.auth.uid;
+    }
+
+    // Room messages
+    match /roomMessages/{messageId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.senderUid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.senderUid == request.auth.uid;
+    }
+  }
+}

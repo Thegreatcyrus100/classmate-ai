@@ -272,9 +272,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onGoToRegister }) => {
 
             <div className="mt-4">
               <button
+                type="button"
                 onClick={handleGoogleLogin}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-xs font-medium text-slate-200 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 transition-colors disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-xs font-medium text-slate-200 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 transition-colors disabled:opacity-50 cursor-pointer"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path

@@ -1,12 +1,9 @@
 {
-  "projectId": "certain-ember-stgzl",
-  "appId": "1:830259107029:web:e2a38d7c53303c4559fe5c",
-  "apiKey": "AIzaSyBXEMbt9_M1dclGrn3g_oA-kMf4nzD8ges",
-  "authDomain": "certain-ember-stgzl.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-classmateai-3e98da7c-56c8-489f-b9d3-8fd22a85ddb7",
-  "storageBucket": "certain-ember-stgzl.firebasestorage.app",
-  "messagingSenderId": "830259107029",
-  "measurementId": "",
-  "oAuthClientId": "830259107029-loeh2v6g7ppk1tamtdp1m85apogg0bnc.apps.googleusercontent.com",
-  "recaptchaSiteKey": ""
+  "projectId": "classmate-ai-c6167",
+  "appId": "1:396511374990:web:f5c95e8a521511871ea3df",
+  "apiKey": "AIzaSyA7lE0tSdOWtGQS5Lv7hXLMwQ4xKqi1k7A",
+  "authDomain": "classmate-ai-c6167.firebaseapp.com",
+  "storageBucket": "classmate-ai-c6167.firebasestorage.app",
+  "messagingSenderId": "396511374990",
+  "measurementId": "G-HXB21G3S6H"
 }

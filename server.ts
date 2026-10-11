@@ -677,9 +677,14 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`ClassMate AI server listening on http://0.0.0.0:${PORT}`);
-  });
+  // Only listen when running standalone (not imported by Vercel serverless)
+  if (!process.env.VERCEL) {
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`ClassMate AI server listening on http://0.0.0.0:${PORT}`);
+    });
+  }
 }
 
 startServer();
+
+export default app;
